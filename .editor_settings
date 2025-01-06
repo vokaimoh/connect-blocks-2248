@@ -1,0 +1,119 @@
+{
+  :bundle {
+    :build-report false
+    :contentless false
+    :debug-symbols false
+    :html5 {
+      :architecture {
+        :js-web false
+        :wasm-web true
+      }
+    }
+    :liveupdate false
+    :texture-compression "enabled"
+    :variant "release"
+  }
+  :code {
+    :find {
+      :term "label"
+      :whole-word true
+      :wrap false
+    }
+  }
+  :workflow {
+    :recent-files [
+      [
+        "/bs/game.appmanifest"
+        :code
+      ]
+      [
+        "/bs/atlases/game.atlas"
+        :scene
+      ]
+      [
+        "/bs/atlases/gui.atlas"
+        :scene
+      ]
+      [
+        "/bs/main.appmanifest"
+        :code
+      ]
+      [
+        "/bs/atlases/main.atlas"
+        :scene
+      ]
+      [
+        "/bs/lua/game.lua"
+        :code
+      ]
+      [
+        "/bs/gui-scripts/game.gui_script"
+        :code
+      ]
+      [
+        "/bs/gui-scripts/help.gui_script"
+        :code
+      ]
+      [
+        "/bs/gui-scripts/over.gui_script"
+        :code
+      ]
+      [
+        "/bs/gui-scripts/settings.gui_script"
+        :code
+      ]
+      [
+        "/bs/gui-scripts/start.gui_script"
+        :code
+      ]
+      [
+        "/bs/scripts/grid.script"
+        :code
+      ]
+      [
+        "/bs/scripts/hexagon.script"
+        :code
+      ]
+      [
+        "/bs/scripts/main.script"
+        :code
+      ]
+      [
+        "/bs/go/hexagon.go"
+        :scene
+      ]
+      [
+        "/bs/go/line.go"
+        :scene
+      ]
+      [
+        "/game.project"
+        :cljfx-form-view
+      ]
+      [
+        "/bs/gui/start.gui"
+        :scene
+      ]
+      [
+        "/bs/gui/settings.gui"
+        :scene
+      ]
+      [
+        "/bs/gui/over.gui"
+        :scene
+      ]
+      [
+        "/bs/gui/help.gui"
+        :scene
+      ]
+      [
+        "/bs/gui/game.gui"
+        :scene
+      ]
+      [
+        "/bs/materials/background.material"
+        :cljfx-form-view
+      ]
+    ]
+  }
+}

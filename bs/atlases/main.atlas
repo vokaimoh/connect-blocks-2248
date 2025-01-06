@@ -1,0 +1,28 @@
+images {
+  image: "/bs/assets/images/game/hexagon-main.png"
+}
+images {
+  image: "/bs/assets/images/game/hexagon-shadow.png"
+}
+images {
+  image: "/bs/assets/images/game/line.png"
+}
+images {
+  image: "/bs/assets/images/gui/back.png"
+}
+images {
+  image: "/bs/assets/images/gui/help.png"
+}
+images {
+  image: "/bs/assets/images/gui/play.png"
+}
+images {
+  image: "/bs/assets/images/gui/restart.png"
+}
+images {
+  image: "/bs/assets/images/gui/settings.png"
+}
+images {
+  image: "/bs/assets/images/gui/square.png"
+}
+extrude_borders: 2

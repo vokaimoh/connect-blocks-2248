@@ -1,0 +1,98 @@
+go.property("level", 1)
+
+local m_game = require "bs.lua.game"
+
+local function level_set(self)
+	label.set_text("#label", 2 ^ self.level)
+	self.label_scale = vmath.vector3(1, 1, 1)
+	if self.level > 26 then
+		self.label_scale.x = 1 - (#tostring(2 ^ 26) * 0.075)
+	elseif self.level > 3 then
+		self.label_scale.x = 1 - (#tostring(2 ^ self.level) * 0.075)
+	end
+	self.label_scale.y = self.label_scale.x
+	go.set("#label", "scale", self.label_scale)
+	if self.level % #m_game.hexagon_colors ~= 0 then
+		go.set("#sprite-visual", "tint", m_game.hexagon_colors[self.level % #m_game.hexagon_colors])
+	else
+		go.set("#sprite-visual", "tint", m_game.hexagon_colors[#m_game.hexagon_colors])
+	end
+end
+
+function init(self)
+	level_set(self)
+end
+
+local function scale_set(value)
+	go.set("#sprite-visual", "scale", value)
+	go.set("#sprite-shadow", "scale", value)
+	go.set("#label", "scale", value)
+end
+
+local function scale_animate(visual_target, label_target, duration)
+	go.animate("#sprite-visual", "scale", go.PLAYBACK_ONCE_FORWARD, visual_target, go.EASING_LINEAR, duration)
+	go.animate("#sprite-shadow", "scale", go.PLAYBACK_ONCE_FORWARD, visual_target, go.EASING_LINEAR, duration)
+	go.animate("#label", "scale", go.PLAYBACK_ONCE_FORWARD, label_target, go.EASING_LINEAR, duration)
+end
+
+local function opacity_set(value)
+	go.set("#sprite-visual", "tint.w", value) -- 1
+	go.set("#sprite-shadow", "tint.w", value) -- 2
+	go.set("#label", "color.w", value)        -- 3
+	go.set("#label", "outline.w", value)      -- 4
+	go.set("#label", "shadow.w", value)       -- 5
+end
+
+local function opacity_animate(target, duration)
+	go.animate("#sprite-visual", "tint.w", go.PLAYBACK_ONCE_FORWARD, target, go.EASING_LINEAR, duration) -- 1
+	go.animate("#sprite-shadow", "tint.w", go.PLAYBACK_ONCE_FORWARD, target, go.EASING_LINEAR, duration) -- 2
+	go.animate("#label", "color.w", go.PLAYBACK_ONCE_FORWARD, target, go.EASING_LINEAR, duration)        -- 3
+	go.animate("#label", "outline.w", go.PLAYBACK_ONCE_FORWARD, target, go.EASING_LINEAR, duration)      -- 4
+	go.animate("#label", "shadow.w", go.PLAYBACK_ONCE_FORWARD, target, go.EASING_LINEAR, duration)       -- 5
+end
+
+local function opacity_animate_cancel()
+	go.cancel_animations("#sprite-visual", "tint.w") -- 1
+	go.cancel_animations("#sprite-shadow", "tint.w") -- 2
+	go.cancel_animations("#label", "color.w")        -- 3
+	go.cancel_animations("#label", "outline.w")      -- 4
+	go.cancel_animations("#label", "shadow.w")       -- 5
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == m_game.fade_in then
+		opacity_set(0)
+		opacity_animate(1, message.duration)
+	elseif message_id == m_game.fade_out then
+		opacity_animate(0, message.duration)
+	elseif message_id == m_game.scale_in then
+		scale_set(m_game.vector3_zero)
+		scale_animate(m_game.vector3_unit, self.label_scale, message.duration)
+	elseif message_id == m_game.scale_out then
+		scale_animate(m_game.vector3_zero, m_game.vector3_zero, message.duration)
+	elseif message_id == m_game.delete then
+		timer.delay(message.duration, false, function()
+			go.delete(".")
+		end)
+	elseif message_id == m_game.hide then
+		opacity_animate_cancel()
+		local tint = go.get("#sprite-visual", "tint.w")
+		if tint < 1 then
+			local add = (1 - tint) / 2
+			local duration = message.duration / (1 / add)
+			timer.delay(duration, false, function()
+				opacity_animate_cancel()
+				opacity_set(tint + add)
+				opacity_animate(0, message.duration - duration)
+			end)
+			opacity_animate(tint + add, duration)
+		else
+			opacity_animate(0, message.duration)
+		end
+	elseif message_id == m_game.level_up then
+		timer.delay(message.duration, false, function()
+			self.level = message.level
+			level_set(self)
+		end)
+	end
+end
